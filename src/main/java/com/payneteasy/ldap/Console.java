@@ -35,10 +35,11 @@ public class Console {
         theCommands = new ArrayList<ICommand>();
         theCommands.add(new UserListCommand(holder));
         theCommands.add(new UserInfoCommand(holder, aUsersDn));
-        theCommands.add(new UserResetCommand(holder, aUsersDn, aPpolicyDn));
+        theCommands.add(new UserResetCommand(aUsersDn, aPpolicyDn));
         theCommands.add(new UserUnlockCommand(holder, aUsersDn));
         theCommands.add(new UserDisableCommand(holder, aUsersDn));
         theCommands.add(new UserHostCommand(aUsersDn));
+        theCommands.add(new UserAddCommand(aUsersDn, aGroupDn, aPpolicyDn));
         theCommands.add(new GroupListCommand(holder));
         theCommands.add(new PoliciesInfoCommand(holder, aPpolicyDn));
     }
@@ -117,6 +118,7 @@ public class Console {
             out.flush();
         }
 
+        out.flush();
     }
 
     public static String[] extractArguments(String aLine) {
@@ -216,6 +218,7 @@ public class Console {
         if(e.getMessage()==null) {
             e.printStackTrace();
         } else {
+            e.printStackTrace();
 
             System.out.println(e.getMessage());
 

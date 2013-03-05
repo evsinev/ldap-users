@@ -1,5 +1,6 @@
 package com.payneteasy.ldap.users.impl;
 
+import com.payneteasy.ldap.AttributesHolder;
 import com.payneteasy.ldap.users.IDirectoryService;
 
 import javax.naming.Context;
@@ -25,6 +26,10 @@ public class DirectoryServiceImpl implements IDirectoryService {
 //        env.put("java.naming.referral", "throw");
 
         theConnection = new InitialLdapContext(env, null);
+    }
+
+    public void addEntry(String aName, AttributesHolder aAttributes) throws NamingException {
+        theConnection.createSubcontext(aName, aAttributes.getAttributes());
     }
 
     @Override

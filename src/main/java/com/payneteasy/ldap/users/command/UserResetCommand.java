@@ -10,6 +10,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
+import javax.naming.NamingException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,8 +21,7 @@ import java.util.Map;
 public class UserResetCommand implements ICommand {
 
 
-    public UserResetCommand(LdapQueryHolder aHolder, String aUsersBase, String aPpoliciesDn) {
-        holder = aHolder;
+    public UserResetCommand(String aUsersBase, String aPpoliciesDn) {
         theUsersBase = aUsersBase;
         thePpoliciesDn = aPpoliciesDn;
     }
@@ -56,6 +56,10 @@ public class UserResetCommand implements ICommand {
             name = "cn="+userParameter+","+theUsersBase;
         }
 
+        createUser(aOut, aDirectoryService, userParameter, name);
+    }
+
+    public void createUser(PrintWriter aOut, IDirectoryService aDirectoryService, String userParameter, String name) throws NamingException {
         String password = PasswordGenerator.createPassword();
 
         aDirectoryService.addOrModify(thePpoliciesDn, new ParametersBuilder()
@@ -80,7 +84,6 @@ public class UserResetCommand implements ICommand {
     }
 
 
-    private final LdapQueryHolder holder;
     private final String theUsersBase;
     private OptionSpec<String> usernameSpec;
     private final String thePpoliciesDn;

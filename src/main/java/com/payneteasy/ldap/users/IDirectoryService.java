@@ -1,6 +1,9 @@
 package com.payneteasy.ldap.users;
 
+import com.payneteasy.ldap.AttributesHolder;
+
 import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
 import java.util.List;
 import java.util.Map;
 
@@ -21,5 +24,7 @@ public interface IDirectoryService {
     void add(String aName, Map<String, Object> aParameters) throws NamingException;
 
     Map<String, Object> get(String aName, String ... aAttributes) throws NamingException;
+
+    void addEntry(String aName, AttributesHolder aAttributes) throws NamingException;
 
 }
