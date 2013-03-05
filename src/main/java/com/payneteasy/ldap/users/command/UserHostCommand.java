@@ -1,14 +1,11 @@
 package com.payneteasy.ldap.users.command;
 
 import com.payneteasy.ldap.users.IDirectoryService;
-import com.payneteasy.ldap.users.IFormatService;
-import com.payneteasy.ldap.users.model.LdapQueryHolder;
-import joptsimple.OptionException;
+import com.payneteasy.ldap.users.IOutputService;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +43,7 @@ public class UserHostCommand implements ICommand {
     }
 
     @Override
-    public void execute(OptionSet aOptionSet, PrintWriter aOut, IDirectoryService aDirectoryService, IFormatService aFormatService) throws Exception {
+    public void execute(OptionSet aOptionSet, IDirectoryService aDirectoryService, IOutputService aFormatService) throws Exception {
         final String userParameter = aOptionSet.valueOf(usernameSpec);
 
         String name;

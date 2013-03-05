@@ -1,15 +1,13 @@
 package com.payneteasy.ldap.users.command;
 
 import com.payneteasy.ldap.users.IDirectoryService;
-import com.payneteasy.ldap.users.IFormatService;
+import com.payneteasy.ldap.users.IOutputService;
 import com.payneteasy.ldap.users.model.LdapQueryHolder;
 import com.payneteasy.ldap.users.model.ParametersBuilder;
-import com.payneteasy.ldap.users.util.PasswordGenerator;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -43,7 +41,7 @@ public class UserDisableCommand implements ICommand {
     }
 
     @Override
-    public void execute(OptionSet aOptionSet, PrintWriter aOut, IDirectoryService aDirectoryService, IFormatService aFormatService) throws Exception {
+    public void execute(OptionSet aOptionSet, IDirectoryService aDirectoryService, IOutputService aFormatService) throws Exception {
         final String userParameter = aOptionSet.valueOf(usernameSpec);
 
         String name;
@@ -64,7 +62,7 @@ public class UserDisableCommand implements ICommand {
                 .build()
         );
 
-        aOut.println("Username "+userParameter+" is locked");
+        aFormatService.info("Username " + userParameter + " is locked");
     }
 
     private final String theUsersBase;

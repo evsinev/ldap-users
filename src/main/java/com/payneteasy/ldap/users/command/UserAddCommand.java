@@ -2,16 +2,10 @@ package com.payneteasy.ldap.users.command;
 
 import com.payneteasy.ldap.AttributesHolder;
 import com.payneteasy.ldap.users.IDirectoryService;
-import com.payneteasy.ldap.users.IFormatService;
+import com.payneteasy.ldap.users.IOutputService;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
-
-import javax.naming.directory.Attributes;
-import javax.naming.directory.BasicAttributes;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserAddCommand implements ICommand {
 
@@ -45,7 +39,7 @@ public class UserAddCommand implements ICommand {
     }
 
     @Override
-    public void execute(OptionSet aOptionSet, PrintWriter aOut, IDirectoryService aDirectoryService, IFormatService aFormatService) throws Exception {
+    public void execute(OptionSet aOptionSet, IDirectoryService aDirectoryService, IOutputService aFormatService) throws Exception {
         final String userParameter = aOptionSet.valueOf(usernameSpec);
 
         String userDn =  "cn="+userParameter+","+theUsersBase;
@@ -75,7 +69,7 @@ public class UserAddCommand implements ICommand {
 
         aDirectoryService.addEntry(userDn, user);
 
-        theUserResetCommand.createUser(aOut, aDirectoryService, userParameter, userDn);
+        theUserResetCommand.createUser(aDirectoryService, userParameter, userDn, aFormatService);
     }
 
     private final String theUsersBase;

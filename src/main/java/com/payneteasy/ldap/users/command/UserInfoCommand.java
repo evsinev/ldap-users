@@ -1,15 +1,13 @@
 package com.payneteasy.ldap.users.command;
 
 import com.payneteasy.ldap.users.IDirectoryService;
-import com.payneteasy.ldap.users.IFormatService;
+import com.payneteasy.ldap.users.IOutputService;
 import com.payneteasy.ldap.users.model.LdapQuery;
 import com.payneteasy.ldap.users.model.LdapQueryHolder;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
-import java.io.PrintWriter;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,7 +41,7 @@ public class UserInfoCommand implements ICommand {
     }
 
     @Override
-    public void execute(OptionSet aOptionSet, PrintWriter aOut, IDirectoryService aDirectoryService, IFormatService aFormatService) throws Exception {
+    public void execute(OptionSet aOptionSet, IDirectoryService aDirectoryService, IOutputService aFormatService) throws Exception {
         LdapQuery query = holder.find("user-info");
         String userParameter = aOptionSet.valueOf(usernameSpec);
         if(!userParameter.startsWith("cn")) {
@@ -52,7 +50,7 @@ public class UserInfoCommand implements ICommand {
 
         Map<String, Object> result = aDirectoryService.get(userParameter, query.attributes);
 
-        aOut.print(aFormatService.format(result, query.attributes));
+        aFormatService.println(aFormatService.format(result, query.attributes));
 
     }
 

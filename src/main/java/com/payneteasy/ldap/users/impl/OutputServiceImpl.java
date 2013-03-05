@@ -1,16 +1,24 @@
 package com.payneteasy.ldap.users.impl;
 
-import com.payneteasy.ldap.users.IFormatService;
-import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
+import com.payneteasy.ldap.users.IOutputService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.DatatypeConverter;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class FormatServiceImpl implements IFormatService {
+public class OutputServiceImpl implements IOutputService {
+
+    private static final Logger LOG = LoggerFactory.getLogger("ldap-users");
 
     public static final int MAX_IN_COLUMN = 30;
+
+    public OutputServiceImpl(PrintWriter aOut) {
+        theOut = aOut;
+    }
 
     @Override
     public String format(List<Map<String, Object>> aResult, String[] aHeaders) {
@@ -55,6 +63,38 @@ public class FormatServiceImpl implements IFormatService {
 
         }
         return sb.toString();
+    }
+
+    @Override
+    public void println(String aText) {
+        theOut.println(aText);
+        theOut.flush();
+    }
+
+    @Override
+    public void info(String aText) {
+        theOut.println(aText);
+        theOut.flush();
+        LOG.info(aText);
+    }
+
+    @Override
+    public void log(String aText) {
+        LOG.info(aText);
+    }
+
+    @Override
+    public void error(String aMessage, Exception e) {
+        theOut.println("ERROR: "+aMessage);
+        theOut.flush();
+        LOG.error(aMessage, e);
+    }
+
+    @Override
+    public void error(String aMessage) {
+        theOut.println("ERROR: "+aMessage);
+        theOut.flush();
+        LOG.error(aMessage);
     }
 
     private void printText(StringBuilder sb, String text, int max) {
@@ -193,4 +233,5 @@ public class FormatServiceImpl implements IFormatService {
         }
     }
 
+    private final PrintWriter theOut;
 }

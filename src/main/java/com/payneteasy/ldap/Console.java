@@ -1,11 +1,10 @@
 package com.payneteasy.ldap;
 
 import com.payneteasy.ldap.users.IDirectoryService;
-import com.payneteasy.ldap.users.IFormatService;
+import com.payneteasy.ldap.users.IOutputService;
 import com.payneteasy.ldap.users.command.*;
 import com.payneteasy.ldap.users.impl.DirectoryServiceImpl;
-import com.payneteasy.ldap.users.impl.FormatServiceImpl;
-import com.payneteasy.ldap.users.model.LdapQuery;
+import com.payneteasy.ldap.users.impl.OutputServiceImpl;
 import com.payneteasy.ldap.users.model.LdapQueryHolder;
 import jline.console.ConsoleReader;
 import jline.console.completer.StringsCompleter;
@@ -28,7 +27,7 @@ public class Console {
         theUsername = aUsername;
         holder = new LdapQueryHolder(aUsersDn, aGroupDn);
 
-        theFormatService = new FormatServiceImpl();
+//        theFormatService = new OutputServiceImpl();
         theDirectoryService = new DirectoryServiceImpl();
 
 
@@ -76,6 +75,7 @@ public class Console {
         }
 
         PrintWriter out = new PrintWriter(System.out);
+        IOutputService outputService = new OutputServiceImpl(out);
 
         String line;
         while ((line = reader.readLine()) != null) {
@@ -99,7 +99,8 @@ public class Console {
                     try {
                         OptionSet options = command.getOptionParser().parse(extractArguments(line));
                         try {
-                            command.execute(options, out, theDirectoryService, theFormatService);
+                            outputService.log(line);
+                            command.execute(options, theDirectoryService, outputService);
                         } catch (Exception e) {
                             showException(e);
                         }
@@ -150,21 +151,6 @@ public class Console {
 
         throw new IllegalStateException("Can't find command "+commandText+" in module "+moduleText);
     }
-
-    private void executeQuery(String aName) {
-        LdapQuery query = holder.find(aName);
-
-        try {
-            List<Map<String, Object>> result = theDirectoryService.search(query.name, query.match, query.attributes);
-            System.out.println("result = " + result);
-
-            System.out.println(theFormatService.format(result, query.attributes));
-
-        } catch (NamingException e) {
-            showException(e);
-        }
-    }
-
 
     public static void main(String[] args) throws IOException {
         OptionParser parser = new OptionParser();
@@ -231,7 +217,7 @@ public class Console {
 
     private final String theUrl;
     private final IDirectoryService theDirectoryService;
-    private final IFormatService theFormatService;
+//    private final IOutputService theFormatService;
     private final String theUsername;
     private final LdapQueryHolder holder;
     private final List<ICommand> theCommands;

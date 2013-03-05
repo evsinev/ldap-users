@@ -1,7 +1,9 @@
 package com.payneteasy.ldap;
 
 import com.payneteasy.ldap.users.IDirectoryService;
+import com.payneteasy.ldap.users.IOutputService;
 import com.payneteasy.ldap.users.impl.DirectoryServiceImpl;
+import com.payneteasy.ldap.users.impl.OutputServiceImpl;
 import com.payneteasy.ldap.users.model.ParametersBuilder;
 import com.payneteasy.ldap.users.util.LdapDateUtil;
 import joptsimple.OptionException;
@@ -10,10 +12,7 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
 import javax.naming.NamingException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.*;
@@ -24,19 +23,19 @@ public class CheckInactiveUsers {
     }
 
 
-    public void check(String aUrl, String aUsername, String aPassword, String aUsersDn) throws NamingException, ParseException {
+    public void check(String aUrl, String aUsername, String aPassword, String aUsersDn, IOutputService aFormatService) throws NamingException, ParseException {
         IDirectoryService directoryService = new DirectoryServiceImpl();
         directoryService.connect(aUrl, aUsername, aPassword);
         List<Map<String, Object>> users = directoryService.search(aUsersDn, "(objectClass=posixAccount)"
                 , "cn", "authTimestamp", "createTimestamp", "pwdReset", "pwdChangedTime", "pwdAccountLockedTime");
         for (Map<String, Object> user : users) {
             if(isUserInactive(user)) {
-                disableUser(directoryService, (String) user.get("cn"), aUsersDn);
+                disableUser(directoryService, (String) user.get("cn"), aUsersDn, aFormatService);
             }
         }
     }
 
-    private void disableUser(IDirectoryService aDirectoryService, String aUsername, String aUsersDn) throws NamingException {
+    private void disableUser(IDirectoryService aDirectoryService, String aUsername, String aUsersDn, IOutputService aFormatService) throws NamingException {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.YEAR, -100);
@@ -46,7 +45,7 @@ public class CheckInactiveUsers {
                 .build()
         );
 
-        System.out.println("Disabled user "+aUsername);
+        aFormatService.println("Disabled user "+aUsername);
     }
 
     private boolean isUserInactive(Map<String, Object> aUser) throws ParseException {
@@ -93,13 +92,15 @@ public class CheckInactiveUsers {
                 parser.printHelpOn(System.out);
             } else {
                 String password = readPassword(options.valueOf(passwordSpec));
-
+                IOutputService formatService = new OutputServiceImpl(new PrintWriter(System.out));
                 new CheckInactiveUsers().check(
                         options.valueOf(urlSpec)
                         , options.valueOf(usernameSpec)
                         , password
                         , options.valueOf(usersDnSpec)
+                        , formatService
                 );
+
             }
 
         } catch (OptionException e) {
