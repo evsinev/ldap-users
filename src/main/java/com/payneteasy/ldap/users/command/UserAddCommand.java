@@ -58,7 +58,7 @@ public class UserAddCommand implements ICommand {
             System.err.println(e.getMessage());
         }
 
-        AttributesHolder user = new AttributesHolder("top", "person", "organizationalPerson", "inetOrgPerson", "posixAccount", "shadowAccount");
+        AttributesHolder user = new AttributesHolder("top", "person", "organizationalPerson", "inetOrgPerson", "posixAccount", "shadowAccount", "hostObject");
         user.add("gecos", gecos);
         user.add("sn", gecos);
         user.add("uid", userParameter);
