@@ -15,6 +15,14 @@ import java.util.*;
  *
  */
 public class DirectoryServiceImpl implements IDirectoryService {
+
+    public DirectoryServiceImpl() {
+    }
+
+    public DirectoryServiceImpl(LdapContext aConnection) {
+        this.theConnection = aConnection;
+    }
+
     @Override
     public void connect(String aUrl, String aUsername, String aPassword) throws NamingException {
         Properties env = new Properties();

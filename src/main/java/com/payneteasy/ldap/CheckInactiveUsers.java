@@ -63,7 +63,7 @@ public class CheckInactiveUsers {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(lastAuth);
-        calendar.add(Calendar.DAY_OF_YEAR, 90);
+        calendar.add(Calendar.DAY_OF_YEAR, 60);
 
         return calendar.getTime().before(new Date());
 
