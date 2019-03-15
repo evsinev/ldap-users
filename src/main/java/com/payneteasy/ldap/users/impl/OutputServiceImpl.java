@@ -14,7 +14,7 @@ public class OutputServiceImpl implements IOutputService {
 
     private static final Logger LOG = LoggerFactory.getLogger("ldap-users");
 
-    public static final int MAX_IN_COLUMN = 30;
+    public static final int MAX_IN_COLUMN = 300;
 
     public OutputServiceImpl(PrintWriter aOut) {
         theOut = aOut;
