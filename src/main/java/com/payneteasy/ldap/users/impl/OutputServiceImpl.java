@@ -4,7 +4,6 @@ import com.payneteasy.ldap.users.IOutputService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -177,7 +176,7 @@ public class OutputServiceImpl implements IOutputService {
 
         } else if(aValue instanceof byte[]) {
             byte[] value = (byte[]) aValue;
-            ret = "b64["+value.length+"]="+DatatypeConverter.printBase64Binary(value);
+            ret = "b64["+value.length+"]="+Base64.getEncoder().encodeToString(value);
 
         } else if(aValue instanceof List) {
             StringBuilder sb = new StringBuilder();

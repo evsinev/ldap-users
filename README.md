@@ -6,6 +6,8 @@ Manage ldap users from console shell
 Building project
 ----------------
 
+Requires JDK 11+ (logback 1.6.x).
+
 ```bash
 mvn clean install assembly:single
 ```
